@@ -1,0 +1,9 @@
+[frotz]
+path: path_to_dfrotz
+
+[telegram]
+token: bot_token_you_received_from_botfather
+receiver: receiver_id
+
+[game]
+game: path_to_z5_game_file
