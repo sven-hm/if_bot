@@ -8,12 +8,24 @@ import telepot as tp
 from telepot.loop import MessageLoop
 
 class TFbot(DFrotz):
+    """
+    Telegram Frotz Bot
+
+    FIXME: telepot.loop's MessageLoop cannot be canceled at the moment,
+        see https://github.com/nickoala/telepot/issues/259,
+        and https://github.com/nickoala/telepot/pull/267
+        this might appear in a later version...
+    """
     def __init__(self, config):
         self._bot = tp.Bot(config.get('telegram', 'token'))
         self._receiver = config.get('telegram', 'receiver')
 
         super(TFbot, self).__init__(config.get('frotz', 'path'),
-                                    config.get('game', 'path'))
+                                    config.get('game', 'file'),
+                                    config.get('game', 'backup'))
+
+        # FIXME
+        # self._messageloop_task = None
 
     def start(self):
         sleep(0.5)
@@ -21,7 +33,8 @@ class TFbot(DFrotz):
         if first_msg != '':
             self._bot.sendMessage(self._receiver, first_msg)
 
-        # TODO: how terminate message loop?
+        # FIXME
+        #self._messageloop_task = MessageLoop(self._bot, self._handle).run_forever()
         MessageLoop(self._bot, self._handle).run_as_thread()
 
     def _handle(self, msg):
@@ -34,9 +47,11 @@ class TFbot(DFrotz):
             return_msg = self.get_output()
             self._bot.sendMessage(self._receiver, return_msg)
 
-            first_keyword = msg_text.split(' ')[0]
-            if (first_keyword == 'quit'):
-                sys.exit(0)
+            # FIXME allow user to shut down the bot?
+            #if (msg_text == 'quit'):
+            #    # FIXME
+            #    #self._messageloop_task.cancel()
+            #    sys.exit(0)
 
 if __name__ == '__main__':
     config = ConfigParser()
