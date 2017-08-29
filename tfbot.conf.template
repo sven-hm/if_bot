@@ -6,4 +6,5 @@ token: bot_token_you_received_from_botfather
 receiver: receiver_id
 
 [game]
-game: path_to_z5_game_file
+file: path_to_z5_game_file
+backup: backup1.qzl
