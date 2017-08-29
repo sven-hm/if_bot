@@ -40,7 +40,7 @@ class TFbot(DFrotz):
     def _handle(self, msg):
         msg_text = msg['text']
         # TODO: test other stuff!
-        if msg_text.find('>') == 0:
+        if msg_text.find('/') == 0:
             msg_text = msg_text[1:].lstrip()
             self.do(msg_text)
             sleep(0.1)
