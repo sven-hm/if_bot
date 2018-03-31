@@ -3,8 +3,7 @@ path: path_to_dfrotz
 
 [telegram]
 token: bot_token_you_received_from_botfather
-receiver: receiver_id
+group_id: receiver_id
 
-[game]
+[game_name]
 file: path_to_z5_game_file
-backup: backup1.qzl

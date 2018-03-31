@@ -48,15 +48,14 @@ class DFrotz(object):
         """
         if command == 'quit':
             # FIXME allow user to shut down the bot?
-            if False:
-                self.process.stdin.write('quit\n')
-                sleep(0.1)
-                self.process.stdin.write('Y\n')
-                sleep(0.1)
-                self.readoutputthread.join()
-                return True
-            else:
-                self.outputQ.put('You are not allowed to shut down frotz :(')
+            self.process.stdin.write('quit\n')
+            sleep(0.1)
+            self.process.stdin.write('Y\n')
+            sleep(0.1)
+            self.readoutputthread.join()
+            self.outputQ.queue.clear()
+            self.outputQ.put('Ok, quitted.')
+            return True
         elif command == 'save':
             self.process.stdin.write('save\n')
             sleep(0.1)
