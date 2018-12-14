@@ -78,7 +78,11 @@ class DFrotz(object):
             self.outputQ.put('Ok, restored.')
             return False
         else:
-            self.process.stdin.write(command.decode('utf-8').encode('iso-8859-1') + '\n')
+            try:
+                command = command.decode('utf-8')
+            except:
+                pass
+            self.process.stdin.write(command.encode('iso-8859-1') + '\n')
             return False
 
 if __name__ == '__main__':
@@ -86,7 +90,7 @@ if __name__ == '__main__':
     config.read('tfbot.conf')
 
     ZM = DFrotz(config.get('frotz', 'path'),
-                config.get('zork2', 'file'),
+                config.get('game', 'file'),
                 'tmp.backup')
 
     sleep(0.2)
