@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.7
 
 from frotz import *
 
@@ -6,6 +6,10 @@ import sys
 
 import telepot as tp
 from telepot.loop import MessageLoop
+
+from PyDictionary import PyDictionary
+
+import pdb
 
 class TFbot(DFrotz):
     """
@@ -26,6 +30,8 @@ class TFbot(DFrotz):
 
         # FIXME
         # self._messageloop_task = None
+
+        self._dictionary = PyDictionary()
 
     def start(self):
         sleep(0.5)
@@ -52,6 +58,27 @@ class TFbot(DFrotz):
             #    # FIXME
             #    #self._messageloop_task.cancel()
             #    sys.exit(0)
+        elif msg_text.find('?') == 0:
+            msg_text = msg_text[1:].lstrip()
+            meaning = None
+
+            try:
+                meaning = self._dictionary.meaning(msg_text)
+            except:
+                self._bot.sendMessage(self._receiver, 'Error :(')
+                return
+
+            if type(meaning) is dict:
+                for k in meaning:
+                    return_msg = k + ': '
+                    if type(meaning[k]) is list:
+                        for l in meaning[k]:
+                            return_msg += l + '\n'
+                    self._bot.sendMessage(self._receiver, return_msg)
+            elif type(meaning) is list:
+                for l in meaning:
+                    self._bot.sendMessage(self._receiver, l)
+
 
 if __name__ == '__main__':
     config = ConfigParser()
