@@ -7,6 +7,8 @@ import sys
 import telepot as tp
 from telepot.loop import MessageLoop
 
+from PyDictionary import PyDictionary
+
 class TFbot(object):
     """
     Telegram Frotz Bot
@@ -24,6 +26,8 @@ class TFbot(object):
         # FIXME
         # self._messageloop_task = None
 
+        self._dictionary = PyDictionary()
+
     def start(self):
         # FIXME
         #self._messageloop_task = MessageLoop(self._bot, self._handle).run_forever()
@@ -36,6 +40,32 @@ class TFbot(object):
 
         if msg_text.find('/') == 0:
             msg_text = msg_text[1:].lstrip()
+        if msg_text.find('?') == 0:
+            msg_text = msg_text[1:].lstrip()
+            if msg_text.find('?') == 0:
+                # try to translate 
+                try:
+                    translation = self._dictionary.meaning(msg_text)
+                except:
+                    self._bot.sendMessage(rid, 'failed to search for translation :(')
+                for t in translation:
+                    self._bot.sendMessage(rid, t)
+                return
+
+            # try to get meaning
+            try:
+                meaning = self._dictionary.meaning(msg_text)
+            except:
+                self._bot.sendMessage(rid, 'failed to search for word meaning :(')
+            if type(meaning) is dict:
+                for word_type in meaning:
+                    return_msg = word_type + ': '
+                    for m in meaning[word_type]:
+                        return_msg += m + '\n'
+                    self._bot.sendMessage(rid, return_msg)
+            else:
+                self._bot.sendMessage(rid, 'failed to search for word meaning :(')
+            return
 
         msg_parts = msg_text.split(' ')
 

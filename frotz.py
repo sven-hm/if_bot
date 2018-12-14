@@ -84,8 +84,8 @@ if __name__ == '__main__':
     config.read('tfbot.conf')
 
     ZM = DFrotz(config.get('frotz', 'path'),
-                config.get('game', 'file'),
-                config.get('game', 'backup'))
+                config.get('zork2', 'file'),
+                'tmp.backup')
 
     sleep(0.2)
     print(ZM.get_output())
