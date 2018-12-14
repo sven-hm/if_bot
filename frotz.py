@@ -1,3 +1,5 @@
+#!/usr/bin/python2.7
+
 from subprocess import Popen, PIPE
 from Queue import Queue
 from threading import Thread
@@ -36,7 +38,7 @@ class DFrotz(object):
             line = self.outputQ.get()
             if not ('Score' in line and 'Moves' in line):
                 ret_string += line
-        return ret_string
+        return ret_string.decode('iso-8859-1')
 
     def do(self, command):
         """
@@ -76,7 +78,7 @@ class DFrotz(object):
             self.outputQ.put('Ok, restored.')
             return False
         else:
-            self.process.stdin.write(command + '\n')
+            self.process.stdin.write(command.decode('utf-8').encode('iso-8859-1') + '\n')
             return False
 
 if __name__ == '__main__':
