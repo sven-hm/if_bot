@@ -5,9 +5,13 @@ from Queue import Queue
 from threading import Thread
 from time import sleep
 
+import re
+
 import os
 
 from ConfigParser import ConfigParser
+
+output_formatter = lambda s: re.sub('\n ', '\n', re.sub(' +', ' ', s))
 
 class DFrotz(object):
     """
@@ -18,6 +22,7 @@ class DFrotz(object):
                        path_to_backupfile):
         self.outputQ = Queue()
         self.process = Popen([path_to_dfrotz,
+                              '-w500',
                               path_to_game],
                              stdin=PIPE,
                              stdout=PIPE)
@@ -36,9 +41,11 @@ class DFrotz(object):
         ret_string = ''
         while not self.outputQ.empty():
             line = self.outputQ.get()
-            if not ('Score' in line and 'Moves' in line):
+            if not ('Score' in line and 'Moves' in line) \
+                    and not line.startswith('.') \
+                    and not line.startswith('> >'):
                 ret_string += line
-        return ret_string.decode('iso-8859-1')
+        return output_formatter(ret_string.decode('iso-8859-1').strip())
 
     def do(self, command):
         """
